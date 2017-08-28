@@ -2,6 +2,8 @@
 
 using UnityEngine;
 using System.Collections;
+using System;
+
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -1155,9 +1157,17 @@ public class PlayerMovement : MonoBehaviour
 
     public IEnumerator wildEncounter(WildPokemonInitialiser.Location encounterLocation)
     {
+        
+
         if (accessedMapSettings.getEncounterList(encounterLocation).Length > 0)
         {
-            if (Random.value <= accessedMapSettings.getEncounterProbability())
+            System.Random rand = new System.Random(); //reuse this if you are generating many
+            double u1 = rand.NextDouble(); //uniform(0,1] random doubles
+            double u2 = rand.NextDouble();
+            double randUniform1 = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Sin(2.0 * Math.PI * u2); //random normal(0,1)
+            double randUniform2 = Math.Sqrt(-2.0 * Math.Log(u1)) * Math.Cos(2.0 * Math.PI * u2);
+            double randUniformSum = randUniform1 + randUniform2;
+            if (randUniformSum <= accessedMapSettings.getEncounterProbability())
             {
                 if (setCheckBusyWith(Scene.main.Battle.gameObject))
                 {
